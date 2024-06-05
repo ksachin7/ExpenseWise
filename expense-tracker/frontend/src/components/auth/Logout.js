@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Logout = () => {
+const Logout = ({setIsLoggedIn}) => {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -9,6 +9,8 @@ const Logout = () => {
 
         // Redirect to the login page
         navigate('/signin');
+            // Perform logout actions (e.g., clear session, remove tokens)
+            setIsLoggedIn(false);
     };
 
     // Call handleLogout when the component mounts (or when logout is triggered)

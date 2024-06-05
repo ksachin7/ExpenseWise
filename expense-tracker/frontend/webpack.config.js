@@ -35,6 +35,8 @@ module.exports = {
     static: {
       directory: path.resolve(__dirname, 'public'),
     },
+    contentBase: path.join(__dirname, 'public'),
+    publicPath: '/',
     compress: true,
     port: 9000,
     open: true,
