@@ -99,6 +99,14 @@ Creating this app involves several steps, including setting up the backend and f
 - **Redirect Issue**: After connecting to the React login endpoint, I encountered too many redirects because I was using `formLogin()` in Spring Security, which is intended for Thymeleaf or other Spring views, not for React.
 - **CORS Configuration**: Addressed by configuring CORS settings in the backend to allow requests from the frontend.
 - **SQL Reserved Keyword**: Was named an entity as "user" but found that it's a reserved keyword in SQL. Avoided using reserved keywords like "user" for entity names to prevent conflicts.
-- **React Redirect Issue**: `react-router-dom` requires proper configuration in webpack. You need to set `historyApiFallback: true` in the dev-server to enable routing functionality correctly.
+- **React Redirect Issue**: `react-router-dom` requires proper configuration in webpack. You need to set `historyApiFallback: true` in the dev-server to enable routing functionality correctly. It redirects all requests to the root URL (e.g., /) so that React Router can handle them.
 
-<!-- ### Authentication flow in details -->
+### Authentication flow in details
+
+- User enters credentials in the React frontend and submits the login form.
+- The frontend sends a POST request to a login endpoint in the Spring Boot backend.
+- The backend validates the credentials and generates a JWT token.
+- The backend sends the JWT token back to the frontend.
+- The frontend stores the JWT token securely.
+- Subsequent requests from the frontend to secured endpoints include the JWT token in the request headers for authentication.
+- The backend verifies the JWT token for each secured request.
