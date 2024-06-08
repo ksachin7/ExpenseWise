@@ -6,9 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,16 +29,20 @@ public class SecurityConfig {
 //    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfig corsConfig) throws Exception {
         http
 //                .httpBasic(withDefaults())
-//                .cors(withDefaults()) // Apply the CORS configuration
-                .cors(AbstractHttpConfigurer::disable) // Disable default CORS to use custom filter
+                .cors(withDefaults())
+//                .cors(Customizer.withDefaults()) // Apply the CORS configuration
+//                .cors(AbstractHttpConfigurer::disable) // Disable default CORS to use custom filter
 //                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS with custom configuration
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if not needed
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/login", "/register", "/h2-console/**", "/static/**", "/public/**").permitAll()
+                                .requestMatchers("/users/**","/login", "/register", "/h2-console/**", "/static/**", "/public/**").permitAll()
+//                                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+//                                .requestMatchers("/user/**").hasAnyAuthority("USER")
+//                                .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
                                 .anyRequest().authenticated()
                 )
 //                .formLogin(formLogin ->
