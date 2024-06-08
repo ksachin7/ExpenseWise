@@ -4,7 +4,7 @@ import RegisterForm from './components/auth/RegisterForm';
 import LoginForm from './components/auth/LoginForm';
 import Logout from './components/auth/Logout';
 import ExpenseItem from './components/expenses/ExpenseItem';
-import ExpenseList from './components/expenses/ExpenseList';
+import ExpenseList from './components/pages/ExpenseList';
 import Dashboard from './components/pages/Dashboard';
 import Home from './components/Home';
 import GlobalStyles from './components/styles/GlobalStyles';
