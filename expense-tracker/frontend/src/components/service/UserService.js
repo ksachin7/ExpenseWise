@@ -54,6 +54,7 @@ const updateUser = async (userId, userData) => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+    console.log(response)
     return await response.json();
   } catch (error) {
     console.error('Error updating user:', error);

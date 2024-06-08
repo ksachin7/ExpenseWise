@@ -76,7 +76,7 @@ const Table = ({ headers, data, actions }) => {
                   <ButtonIcon
                     key={actionIndex}
                     color={action.color}
-                    size='sm'
+                    iconSize='2.1rem'
                     // variation='text'
                     onClick={() => action.onClick(item)}
                   >
@@ -98,7 +98,7 @@ Table.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   actions: PropTypes.arrayOf(PropTypes.shape({
     label: PropTypes.string.isRequired,
-    icon: PropTypes.element.isRequired, // Assuming icon is a React element
+    icon: PropTypes.element.isRequired, 
     color: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
   })).isRequired,

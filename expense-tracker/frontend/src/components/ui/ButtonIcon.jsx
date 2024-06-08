@@ -22,7 +22,7 @@ const ButtonIcon = styled.button`
   display: flex !important;
   align-items: center; 
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: ${({ iconSize }) => iconSize ? `calc(${iconSize} - 0.5rem)` : '1.6rem'};
   text-align: center; 
   gap: 0.5rem; 
   &:hover, &:focus {

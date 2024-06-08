@@ -1,5 +1,6 @@
 import React from 'react';
 import {useUser} from '../hooks/useUser';
+import { Heading, Row } from '../ui';
 
 const UserProfile = () => {
   const userId = 1; // Specify the user ID here
@@ -14,12 +15,12 @@ const UserProfile = () => {
   }
 
   return (
-    <div>
-      <h1>User Profile</h1>
+    <Row>
+      <Heading>User Profile</Heading>
       <p>Username: {user.username}</p>
       <p>Email: {user.email}</p>
       <p>Authenticated: {isAuthenticated ? 'Yes' : 'No'}</p>
-    </div>
+    </Row>
   );
 };
 

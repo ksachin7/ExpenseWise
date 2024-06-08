@@ -149,7 +149,7 @@ const LoginForm = () => {
         // Handle success (e.g., save token, redirect)
         setMsg("Login successful!");
         navigate("/");
-        console.log("Login successful:", data);
+        // console.log("Login successful:", data);
         if (rememberMe) {
           localStorage.setItem("username", username);
           localStorage.setItem("rememberMe", true);

@@ -27,7 +27,6 @@ const useUser = (userId) => {
   const isAuthenticated = user?.role !== '';
 //   const isAuthenticated = user?.role === 'authenticated';
 //   console.log(user)
-
   return { isLoading, user, isAuthenticated };
 };
 

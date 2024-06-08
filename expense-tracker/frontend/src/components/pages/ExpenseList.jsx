@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ExpenseItem from './ExpenseItem';
-import { Button, Form, Input, Modal, Container, Heading, ButtonIcon, TextArea  } from '../ui';
+import ExpenseItem from '../expenses/ExpenseItem';
+import { Button, Form, Input, Modal, Container, Heading, ButtonIcon, TextArea, Header  } from '../ui';
 import { FaPlus } from 'react-icons/fa';
 
 const ListContainer = styled.div`
@@ -30,7 +30,7 @@ const ExpenseList = ({ expenses }) => {
     closeModal(); // Close modal after form submission
   };
   return (
-    <Container>
+    <div>
       <Heading>Expenses</Heading>
       <ButtonIcon onClick={openModal}><FaPlus /> Add Expense</ButtonIcon>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -47,7 +47,7 @@ const ExpenseList = ({ expenses }) => {
           <ExpenseItem key={expense.id} expense={expense} />
         ))}
       </ListContainer>
-    </Container>
+    </div>
   );
 };
 

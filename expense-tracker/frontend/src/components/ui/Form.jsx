@@ -18,10 +18,13 @@ const Form = styled.form`
   color: var(--color-grey-700);
   & > * {
     display: block;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
   }
   & input{
     width: 100%;
+  }
+  & Button{
+    margin-top: 1rem;
   }
 `;
 
