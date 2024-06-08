@@ -35,12 +35,19 @@ module.exports = {
     static: {
       directory: path.resolve(__dirname, 'public'),
     },
-    contentBase: path.join(__dirname, 'public'),
-    publicPath: '/',
+    // contentBase: path.join(__dirname, 'public'),
+    // publicPath: '/',
     compress: true,
     port: 9000,
     open: true,
     // Proxy requests to the backend server
-    
+    proxy: [{
+      context: ['/api'],
+      target: 'http://localhost:8080',
+      logLevel: 'debug' /*optional*/,
+      pathRewrite: { '^/api': '' },
+      changeOrigin: true,
+      secure: false,
+    }],
   }
 };

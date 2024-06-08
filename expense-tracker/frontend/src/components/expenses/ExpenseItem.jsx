@@ -11,9 +11,9 @@ const ItemContainer = styled.div`
 const ExpenseItem = ({ expense }) => {
   return (
     <ItemContainer>
-      <h3>{expense.description}</h3>
+      {/* <h3>{expense.description}</h3>
       <p>Amount: ${expense.amount}</p>
-      <p>Date: {expense.date}</p>
+      <p>Date: {expense.date}</p> */}
     </ItemContainer>
   );
 };
