@@ -10,8 +10,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,5 +39,23 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(List<String> roles) {
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    public List<String> generateUsernameSuggestions(String username) {
+        List<String> suggestions = new ArrayList<>();
+        Random random = new Random();
+
+        // Generate and add 3 random suggestions
+        for (int i = 0; i < 3; i++) {
+            // Generate a random number between 100 and 9999
+            int randomNumber = random.nextInt(9000) + 100;
+            // Append the random number to the username
+            String suggestion = username + randomNumber;
+            // Check if the suggestion already exists in the database
+            if (!userRepository.existsByUsername(suggestion)) {
+                suggestions.add(suggestion);
+            }
+        }
+        return suggestions;
     }
 }

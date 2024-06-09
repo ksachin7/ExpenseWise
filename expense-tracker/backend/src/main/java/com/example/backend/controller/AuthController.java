@@ -2,10 +2,11 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.AuthResponse;
 import com.example.backend.dto.LoginRequest;
-import com.example.backend.dto.SignUpRequest;
+import com.example.backend.dto.RegisterRequest;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.service.CustomUserDetailsService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +16,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.AuthenticationException;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 //@RequestMapping("/api")
 @Slf4j
@@ -41,6 +49,8 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
 //    public AuthController(AuthenticationManager authenticationManager) {
 //        this.authenticationManager = authenticationManager;
@@ -74,9 +84,27 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest, BindingResult bindingResult) {
+        // Check for validation errors
+        if (bindingResult.hasErrors()) {
+            List<String> validationErrors = bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Validation failed");
+            responseBody.put("errors", validationErrors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        }
+
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body("Username is already taken!");
+            // Fetch similar usernames from the database
+            List<String> suggestedUsernames = customUserDetailsService.generateUsernameSuggestions(signUpRequest.getUsername());
+
+            // Include suggestions in the response
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Username already exists");
+            responseBody.put("suggestedUsernames", suggestedUsernames);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseBody);
         }
 
         // Creating user's account
