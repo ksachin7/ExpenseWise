@@ -3,6 +3,7 @@ package com.example.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -26,8 +27,20 @@ public class User {
     private String password;
 
     @Email(message = "Email should be valid")
-//    @NotBlank(message = "Email is mandatory")
+    @NotBlank(message = "Email is mandatory")
     private String email;
 
+//    @NotBlank(message="Mobile number must not be blank")
+//    @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+//    private String mobileNum;
+
+
     private String role;
+
+//    @Lob
+//    @Column(columnDefinition = "BLOB", length = 1048576) // Specify the length in bytes
+//    private byte[] profileImage;
+
+    private String profileImageFileName; // Store the filename instead of content
+
 }

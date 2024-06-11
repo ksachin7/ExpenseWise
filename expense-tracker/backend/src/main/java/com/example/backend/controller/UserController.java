@@ -1,16 +1,22 @@
 package com.example.backend.controller;
 
 import com.example.backend.model.User;
+import com.example.backend.repository.FileRepository;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.util.FileUploadUtil;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,21 +30,47 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
+    private FileRepository fileRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private FileUploadUtil fileUploadUtil;
+
+    @Autowired
+    private HttpSession httpSession;
 
     @GetMapping
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public User getUserById(@PathVariable Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    @GetMapping("/{username}")
+    public User getUserByUsername(@PathVariable String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @GetMapping("/profileImage/{fileName}")
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable String fileName) {
+        byte[] imageContent = fileUploadUtil.getFileContent(fileName);
+        if (imageContent == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageContent);
+    }
+
     @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
+    public ResponseEntity<?> createUser(
+            @Valid @ModelAttribute User user,
+            @RequestPart("profileImage") MultipartFile profileImage,
+            BindingResult bindingResult) throws IOException {
+        if (bindingResult.hasErrors()) {
             List<String> validationErrors = bindingResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.toList());
@@ -50,13 +82,24 @@ public class UserController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Check if the user's role already contains "ROLE_ADMIN"
-        if (!(user.getRole() == null) && user.getRole().contains("ADMIN")) {
-            // If user has "ROLE_ADMIN", append "ROLE_USER" to the existing role
+        // Check if the user's role already contains "ADMIN"
+        if (user.getRole() != null && user.getRole().contains("ADMIN")) {
+            // If user has "ADMIN", append "USER" to the existing role
             user.setRole(user.getRole() + "USER");
         } else {
-            // If user doesn't have "ROLE_ADMIN", assign "ROLE_USER" as the sole role
+            // If user doesn't have "ADMIN", assign "USER" as the sole role
             user.setRole("USER");
+        }
+
+        // Handle profile image
+        if (!profileImage.isEmpty()) {
+            try {
+                String fileName = fileUploadUtil.uploadFileAndSaveToDatabase(profileImage);
+                user.setProfileImageFileName(fileName);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error occurred while processing profile image");
+            }
         }
 
         // Save user to repository and return ResponseEntity
@@ -64,18 +107,44 @@ public class UserController {
         return ResponseEntity.ok(savedUser);
     }
 
-
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @Valid @RequestBody User userDetails) {
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @Valid @ModelAttribute User userDetails,
+            @RequestPart("profileImage") MultipartFile profileImage,
+            BindingResult bindingResult) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
+        if (bindingResult.hasErrors()) {
+            List<String> validationErrors = bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Validation failed");
+            responseBody.put("errors", validationErrors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        }
+
+        // Update user details
         user.setUsername(userDetails.getUsername());
         user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         user.setEmail(userDetails.getEmail());
-        // Preserve the existing role or assign a new role from userDetails
         user.setRole(userDetails.getRole() != null ? userDetails.getRole() : user.getRole());
 
-        return userRepository.save(user);
+        // Handle profile image
+        if (!profileImage.isEmpty()) {
+            try {
+                String fileName = fileUploadUtil.uploadFileAndSaveToDatabase(profileImage);
+                user.setProfileImageFileName(fileName);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error occurred while processing profile image");
+            }
+        }
+
+        // Save updated user to repository
+        User updatedUser = userRepository.save(user);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
