@@ -96,10 +96,21 @@ Creating this app involves several steps, including setting up the backend and f
 
 ### Issues Faced and Resolutions
 
+Here are some of the issues I faced during creating this project and how I resolved them:
+
+**Backend Issues**
+
 - **Redirect Issue**: After connecting to the React login endpoint, I encountered too many redirects because I was using `formLogin()` in Spring Security, which is intended for Thymeleaf or other Spring views, not for React.
 - **CORS Configuration**: Addressed by configuring CORS settings in the backend to allow requests from the frontend.
 - **SQL Reserved Keyword**: Was named an entity as "user" but found that it's a reserved keyword in SQL. Avoided using reserved keywords like "user" for entity names to prevent conflicts.
+
+**Frontend Issues**
+
 - **React Redirect Issue**: `react-router-dom` requires proper configuration in webpack. You need to set `historyApiFallback: true` in the dev-server to enable routing functionality correctly. It redirects all requests to the root URL (e.g., /) so that React Router can handle them.
+- **react-hhok-form issues**: Was facing issues with registering inputs fixed it.
+- **Handling User Data:** Faced uncertainty about where to manage user data and how to integrate it with authentication.
+- **Resolved Infinite Render Loop:** Initially encountered an infinite render loop due to incorrect logic, trying to fetch and set user details in the AuthContext directly from the `LoginForm`. Rectified by separating concerns: `LoginForm` handles authentication, setting user ID, while `useUser()` hook independently fetches user details.
+- **File-upload issues**: Encountered an `HttpMediaTypeNotSupportedException` error while attempting to upload files. Additionally, React form data did not include file data. Fixed them all.
 
 ### Authentication flow in details
 
