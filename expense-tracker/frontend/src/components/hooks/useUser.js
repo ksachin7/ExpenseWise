@@ -1,33 +1,64 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
-const useUser = (userId) => {
+const useUser = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
 
-  const BASE_URI= 'http://localhost:8080'
+  const { loggedInUser } = useAuth();
+
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const response = await fetch(`${BASE_URI}/users/${userId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user');
+      if (loggedInUser) {
+        setIsLoading(true);
+
+        try {
+          const response = await fetch(`http://localhost:8080/users/${loggedInUser}`);
+          if (response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+            console.log(userData);
+
+            if (userData.profileImageFileName) {
+              console.log(userData.profileImageFileName);
+              fetchProfileImage(userData.profileImageFileName);
+            }
+          } else {
+            console.error('Failed to fetch user data');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        } finally {
+          setIsLoading(false);
         }
-        const userData = await response.json();
-        setUser(userData);
-      } catch (error) {
-        console.error(error);
-      } finally {
+      } else {
         setIsLoading(false);
+        setUser(null);
+      }
+    };
+
+    const fetchProfileImage = async (fileName) => {
+      try {
+        const response = await fetch(`http://localhost:8080/users/profileImage/${fileName}`);
+        if (response.ok) {
+          const imageBlob = await response.blob();
+          console.log(imageBlob);
+          const imageUrl = URL.createObjectURL(imageBlob);
+          console.log(`imageurl`,imageUrl) // imageurl blob:http://localhost:9000/07aade99-d6c2-4d42-9a7d-7a141c2b3a62
+          setProfileImage(imageUrl);
+        } else {
+          console.error('Failed to fetch profile image');
+        }
+      } catch (error) {
+        console.error('Error fetching profile image:', error);
       }
     };
 
     fetchUser();
-  }, [userId]);
+  }, [loggedInUser]);
 
-  const isAuthenticated = user?.role !== '';
-//   const isAuthenticated = user?.role === 'authenticated';
-//   console.log(user)
-  return { isLoading, user, isAuthenticated };
+  return { isLoading, user, profileImage };
 };
 
-export {useUser};
+export { useUser };

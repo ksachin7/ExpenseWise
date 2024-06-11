@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from "styled-components";
-import { useUser } from '../hooks/useUser';
+import {useUser} from '../hooks/useUser';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const StyledUserAvatar = styled.div`
   display: flex;
@@ -22,20 +23,25 @@ const Avatar = styled.img`
   outline: 2px solid var(--color-grey-100);
 `;
 
+const UserAvatar = () => {
+  const navigate= useNavigate();
+  const { user, profileImage } = useUser();
 
-function UserAvatar() {
-  const { user } = useUser();
-  const { username, avatar } = user;
+  if (!user) {
+    // Handle case where user data is null
+    return <div>No user data available</div>;
+  }
 
-  // console.log('user',user)
-  // console.log('user_metadata',user.user_metadata)
+  console.log('user:', user);
+
+  const { username } = user;
 
   return (
     <StyledUserAvatar>
-      <Avatar src={avatar || 'default-user.jpg'} alt={username} />
+      <Avatar src={profileImage || 'default-user.jpg'} alt={username} onClick={() => navigate("/account")} />
       <span>{username}</span>
     </StyledUserAvatar>
-  )
-}
+  );
+};
 
 export default UserAvatar;

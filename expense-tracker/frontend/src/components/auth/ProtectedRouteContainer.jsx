@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { styled } from "styled-components";
 import Spinner from "../ui/Spinner";
-import { useUser } from "../hooks/useUser";
+// import { useUser } from "../hooks/useUser";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function ProtectedRouteContainer({ children }) {
 
@@ -16,15 +17,11 @@ function ProtectedRouteContainer({ children }) {
   const navigate = useNavigate();
 
   // Load the authenticated user
-  const { isAuthenticated, isLoading } = useUser(1);
-
-  // temporarily
-  // const isAuthenticated=true; const isLoading=false;
-  // console.log(isAuthenticated);
+  const { isAuthenticated, isLoading } = useAuth();
 
   // If there is no authenticated user redirect to login
   useEffect(() => {
-    if (!isAuthenticated && !isLoading) navigate('/signin');
+    if (!isAuthenticated) navigate('/signin');
   }, [isAuthenticated, isLoading, navigate])
 
   // Show a Spinner while loading

@@ -1,5 +1,21 @@
 import styled, { css } from "styled-components";
 
+
+const FormContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  background: var(--color-grey-100);
+  backdrop-filter: blur(5px);
+  box-shadow: var(--shadow-md);
+`;
+
 const Form = styled.form`
   padding: ${(props) => (props.type === "regular" ? "2.1rem" : "1rem")};
   background-color: ${(props) =>
@@ -22,14 +38,21 @@ const Form = styled.form`
   }
   & input{
     width: 100%;
+    margin-top: 1rem;
   }
   & Button{
     margin-top: 1rem;
   }
 `;
 
+
+const ErrorMessage = styled.div`
+  color: var(--color-red-500);
+  margin-bottom: 10px;
+`;
+
 Form.defaultProps = {
   type: "regular",
 };
 
-export default Form;
+export {FormContainer, Form, ErrorMessage};

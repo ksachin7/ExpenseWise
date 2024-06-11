@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { Button, Container } from "../ui";
+import { useUser } from "../hooks/useUser";
+import { useAuth } from "../context/AuthContext";
 
-const FullPageContainer= styled.div`
+const FullPageContainer = styled.div`
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -120,6 +122,8 @@ const LoginForm = () => {
   const [msg, setMsg] = useState(null);
 
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const { loggedInUser, setLoggedInUser } = useAuth();
 
   // Load rememberMe preference from localStorage on component mount
   useEffect(() => {
@@ -147,8 +151,47 @@ const LoginForm = () => {
       if (response.ok) {
         const data = await response.json();
         // Handle success (e.g., save token, redirect)
+        const { username: user } = data; // Extract username from response data
+        console.log('data', data, ', Extracted username:', user);
+
+        setLoggedInUser(user);
+        // setLoggedInUser(prevUser => user);
+        console.log('loggedInUser:', loggedInUser) // null
         setMsg("Login successful!");
+        login(); // Trigger login action
+
+        // // Fetch user information after successful login
+        // const userResponse = await fetch(`${api}/user`, {
+        //   headers: {
+        //     Authorization: `Bearer ${data.token}`, // Assuming the server responds with a token
+        //   },
+        // });
+
+        // if (userResponse.ok) {
+        //   const userData = await userResponse.json();
+        //   // Store user data in your application state or context
+        //   setUser(userData);
+        // } else {
+        //   // Handle error fetching user info
+        //   console.error("Failed to fetch user information after login");
+        // }
+
+        // Fetch user information after successful login
+        // const userDataResponse = await fetch(`${api}/user`, {
+        //   credentials: "include", // Ensure credentials (session) are included in the request
+        // });
+
+        // if (userDataResponse.ok) {
+        //   const userData = await userDataResponse.json();
+        //   // Store user data in your application state or context
+        //   setUser(userData);
+        // } else {
+        //   // Handle error fetching user info
+        //   console.error("Failed to fetch user information after login");
+        // }
+
         navigate("/");
+
         // console.log("Login successful:", data);
         if (rememberMe) {
           localStorage.setItem("username", username);
@@ -157,6 +200,7 @@ const LoginForm = () => {
           localStorage.removeItem("username");
           localStorage.removeItem("rememberMe");
         }
+
       } else {
         const data = await response.text();
         setError(true);
@@ -200,18 +244,18 @@ const LoginForm = () => {
             />
           </InputContainer>
           <CheckboxContainer>
-          <span>
-          <CheckboxLabel htmlFor="rememberMe" style={{marginBottom: "auto"}}>Remember me</CheckboxLabel>
+            <span>
+              <CheckboxLabel htmlFor="rememberMe" style={{ marginBottom: "auto" }}>Remember me</CheckboxLabel>
               <Checkbox
                 type="checkbox"
                 id="rememberMe"
                 checked={rememberMe}
                 onChange={(event) => setRememberMe(event.target.checked)}
               />
-          </span>
-          <LinkContainer>
-            <Link to="/forgot-password">Forgot Password?</Link>
-          </LinkContainer>
+            </span>
+            <LinkContainer>
+              <Link to="/forgot-password">Forgot Password?</Link>
+            </LinkContainer>
           </CheckboxContainer>
           {msg && <Message errors={error}>{msg}</Message>}
           <Button size="lg" type="submit">Login</Button>

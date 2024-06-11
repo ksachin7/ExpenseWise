@@ -16,58 +16,61 @@ import { DarkModeProvider } from './components/context/DarkModeContext';
 import Users from './components/pages/users';
 import UserProfile from './components/pages/UserProfile';
 import SplitBill from './components/pages/SplitBill';
+import { AuthProvider } from './components/context/AuthContext';
 
 const App = () => {
 
   return (
-    <DarkModeProvider>
-      <GlobalStyles />
-      <Router>
-        <Routes>
-          <Route element={
-            <ProtectedRouteContainer>
-              <AppLayout />
-            </ProtectedRouteContainer>
-          }>
-            <Route index element={<Navigate replace to="Dashboard" />} />
-            {/* <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Home />} /> */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/signout" element={<Logout setIsLoggedIn={true} />} />
-            {/* <Route path="/expenses/add" element={<ExpenseForm />} /> */}
-            <Route path="/expenses/:id" element={<ExpenseItem />} />
-            <Route path="/expenses" element={<ExpenseList />} />
-            {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-            <Route path='/users' element={<Users />} />
-            <Route path='/account' element={<UserProfile />} />
-            <Route path='/split' element={<SplitBill />} />
-          </Route>
-          <Route path="/signup" element={<RegisterForm />} />
-          <Route path="/signin" element={<LoginForm />} />
-          {/* <Route path="login" element={<Login />} /> */}
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </Router>
-      <Toaster
-        position="top-center"
-        gutter={11}
-        containerStyle={{ margin: "7px" }}
-        toastOptions={{
-          success: {
-            duration: 3000,
-          },
-          error: {
-            duration: 5000,
-          }
-        }}
-        style={{
-          fontSize: "14px",
-          maxWidth: '500px',
-          padding: "16px 24px",
-          backgroundColor: 'var(--color-grey-0)',
-          color: 'var(--color-grey-700)'
-        }}
-      ></Toaster>
-    </DarkModeProvider>
+    <AuthProvider>
+      <DarkModeProvider>
+        <GlobalStyles />
+        <Router>
+          <Routes>
+            <Route element={
+              <ProtectedRouteContainer>
+                <AppLayout />
+              </ProtectedRouteContainer>
+            }>
+              <Route index element={<Navigate replace to="Dashboard" />} />
+              {/* <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" /> : <Home />} /> */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/signout" element={<Logout setIsLoggedIn={true} />} />
+              {/* <Route path="/expenses/add" element={<ExpenseForm />} /> */}
+              <Route path="/expenses/:id" element={<ExpenseItem />} />
+              <Route path="/expenses" element={<ExpenseList />} />
+              {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+              <Route path='/users' element={<Users />} />
+              <Route path='/account' element={<UserProfile />} />
+              <Route path='/split' element={<SplitBill />} />
+            </Route>
+            <Route path="/signup" element={<RegisterForm />} />
+            <Route path="/signin" element={<LoginForm />} />
+            {/* <Route path="login" element={<Login />} /> */}
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </Router>
+        <Toaster
+          position="top-center"
+          gutter={11}
+          containerStyle={{ margin: "7px" }}
+          toastOptions={{
+            success: {
+              duration: 3000,
+            },
+            error: {
+              duration: 5000,
+            }
+          }}
+          style={{
+            fontSize: "14px",
+            maxWidth: '500px',
+            padding: "16px 24px",
+            backgroundColor: 'var(--color-grey-0)',
+            color: 'var(--color-grey-700)'
+          }}
+        ></Toaster>
+      </DarkModeProvider>
+    </AuthProvider>
   );
 };
 
