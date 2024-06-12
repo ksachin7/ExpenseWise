@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 
+import static org.hibernate.query.sqm.tree.SqmNode.log;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -18,6 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleMediaTypeNotSupportedException(
             HttpMediaTypeNotSupportedException ex, WebRequest request) {
         String errorMessage = "Unsupported Media Type: " + ex.getContentType();
+        log.error("Unsupported Media Type: {}", ex.getContentType(), ex);
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                 .body(Map.of("message", errorMessage));
     }

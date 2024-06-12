@@ -1,17 +1,20 @@
 package com.example.backend.security;
 
 import com.example.backend.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,10 +42,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if not needed
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/users/**","/login", "/register", "/h2-console/**", "/static/**", "/public/**").permitAll()
-//                                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-//                                .requestMatchers("/user/**").hasAnyAuthority("USER")
-//                                .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
+                                .requestMatchers("/login", "/register", "/h2-console/**", "/users/**","/static/**", "/public/**").permitAll()
+//                                .requestMatchers("/users/admin/**").permitAll()
+                                .requestMatchers("/users/admin/**").hasAuthority("ROLE_ADMIN")
+//                                .requestMatchers("/users/user/**").hasAuthority("ROLE_USER", "ADMIN", "*")
                                 .anyRequest().authenticated()
                 )
 //                .formLogin(formLogin ->
@@ -118,6 +121,11 @@ public class SecurityConfig {
 
         return new ProviderManager(authenticationProvider);
     }
+
+//    @Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth, UserDetailsService userDetailsService) throws Exception {
+//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+//    }
 
 //    @Bean
 //    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

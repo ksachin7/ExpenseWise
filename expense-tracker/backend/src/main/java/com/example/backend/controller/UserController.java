@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -41,22 +42,25 @@ public class UserController {
     @Autowired
     private HttpSession httpSession;
 
-    @GetMapping
+    @GetMapping("/admin")
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @GetMapping("/id/{id}")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/id/{id}")
     public User getUserById(@PathVariable Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @GetMapping("/{username}")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/{username}")
     public User getUserByUsername(@PathVariable String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @GetMapping("/profileImage/{fileName}")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/user/profileImage/{fileName}")
     public ResponseEntity<byte[]> getProfileImage(@PathVariable String fileName) {
         byte[] imageContent = fileUploadUtil.getFileContent(fileName);
         if (imageContent == null) {
@@ -65,7 +69,7 @@ public class UserController {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageContent);
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<?> createUser(
             @Valid @ModelAttribute User user,
             @RequestPart("profileImage") MultipartFile profileImage,
@@ -107,7 +111,7 @@ public class UserController {
         return ResponseEntity.ok(savedUser);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public ResponseEntity<?> updateUser(
             @PathVariable Long id,
             @Valid @ModelAttribute User userDetails,
@@ -147,7 +151,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public void deleteUser(@PathVariable Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
