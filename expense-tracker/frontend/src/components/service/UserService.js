@@ -1,6 +1,6 @@
 const fetchUsers = async () => {
   try {
-    const response = await fetch('http://localhost:8080/users', {
+    const response = await fetch('http://localhost:8080/users/admin', {
       method: 'GET',
       // mode:'no-cors',
       headers: {
@@ -21,7 +21,7 @@ const fetchUsers = async () => {
 
 const createUser = async (userData) => {
   try {
-    const response = await fetch('http://localhost:8080/users', {
+    const response = await fetch('http://localhost:8080/users/admin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const createUser = async (userData) => {
 
 const updateUser = async (userId, userData) => {
   try {
-    const response = await fetch(`http://localhost:8080/users/${userId}`, {
+    const response = await fetch(`http://localhost:8080/users/admin/${userId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const updateUser = async (userId, userData) => {
 
 const deleteUser = async (userId) => {
   try {
-    const response = await fetch(`http://localhost:8080/users/${userId}`, {
+    const response = await fetch(`http://localhost:8080/users/admin/${userId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

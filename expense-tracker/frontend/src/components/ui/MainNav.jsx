@@ -6,6 +6,8 @@ import { HiHome } from "react-icons/hi2";
 import { HiMiniUser } from "react-icons/hi2";
 import { HiCalendarDays, HiHomeModern, HiOutlineUsers, HiCog6Tooth } from "react-icons/hi2";
 import { GiExpense, GiTakeMyMoney } from "react-icons/gi";
+import { useAuth } from '../context/AuthContext';
+import { useUser } from '../hooks/useUser';
 
 const NavList = styled.ul`
   display: flex;
@@ -53,24 +55,28 @@ const StyledNavLink = styled(NavLink)`
 
 
 function MainNav() {
+  const { user } = useUser();
+
   return (
     <nav>
       <NavList>
-        <li><StyledNavLink to='/dashboard'><HiHome />
-          <span>Home</span>
+        <li><StyledNavLink to='/dashboard'>
+          <HiHome /> <span>Home</span>
         </StyledNavLink></li>
-        <li><StyledNavLink to='/expenses'><GiTakeMyMoney />
-          <span>Expense</span>
+        <li><StyledNavLink to='/expenses'>
+          <GiTakeMyMoney /> <span>Expense</span>
         </StyledNavLink></li>
-        <li><StyledNavLink to='/split'><GiExpense />
-          <span>Split Expense</span>
+        <li><StyledNavLink to='/split'>
+          <GiExpense /> <span>Split Expense</span>
         </StyledNavLink></li>
-        <li><StyledNavLink to='/account'><HiMiniUser />
-          <span>Account</span>
-        </StyledNavLink></li>
-        <li><StyledNavLink to='/users'><HiOutlineUsers />
-          <span>Users</span>
-        </StyledNavLink></li>
+        <li><StyledNavLink to='/account'>
+          <HiMiniUser /> <span>Account</span>
+        </StyledNavLink>
+        </li>
+        {(user?.role === 'ROLE_ADMIN' || user?.role === 'ADMIN') &&
+          (<li><StyledNavLink to='/admin'>
+            <HiOutlineUsers /> <span>Users</span>
+          </StyledNavLink></li>)}
         {/* <li><StyledNavLink to='/settings'><HiCog6Tooth />
           <span>Settings</span>
         </StyledNavLink></li> */}

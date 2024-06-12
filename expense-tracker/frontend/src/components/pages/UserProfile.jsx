@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useUser } from '../hooks/useUser';
-import { useAuth } from '../context/AuthContext';
+import {Heading} from '../ui'
 
 const UserProfile = () => {
-  const { isLoading, isAuthenticated } = useAuth();
-  const { user, profileImage } = useUser();
+  const { isLoading, user, profileImage } = useUser();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -20,44 +19,40 @@ const UserProfile = () => {
   const profileImageUrl = profileImage ? profileImage : null;
 
   return (
-    <ProfileContainer>
-      <Heading>User Profile</Heading>
+    <>
+      <Heading as="h1">User Profile</Heading>
+      <ProfileContainer>
       {profileImageUrl && <ProfileImage src={profileImageUrl} alt={`${user.username}'s profile`} />}
-      <InfoContainer>
-        <InfoItem>
-          <strong>Username:</strong> {user.username}
-        </InfoItem>
-        <InfoItem>
-          <strong>Email:</strong> {user.email}
-        </InfoItem>
-        <InfoItem>
+        <InfoContainer>
+          <InfoItem>
+            <strong>Username:</strong> {user.username}
+          </InfoItem>
+          <InfoItem>
+            <strong>Email:</strong> {user.email}
+          </InfoItem>
+          {/* <InfoItem>
           <strong>Authenticated:</strong> {isAuthenticated ? 'Yes' : 'No'}
         </InfoItem>
         <InfoItem>
           <strong>Role:</strong> {user.role === 'ROLE_USER'? 'user' : 'admin'}
-        </InfoItem>
-      </InfoContainer>
-    </ProfileContainer>
+        </InfoItem> */}
+        </InfoContainer>
+      </ProfileContainer>
+    </>
   );
 };
 
 export default UserProfile;
 
-// Styled components
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 20px;
-  padding: 20px;
-  border: 1px solid var(--color-grey-300);
-  border-radius: 8px;
+  /* align-items: center; */
+  width: 400px;
+  padding: 41px;
+  /* border: 1px solid var(--color-grey-300); */
+  /* border-radius: 8px; */
   box-shadow: var(--shadow-sm);
-`;
-
-const Heading = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
 `;
 
 const ProfileImage = styled.img`

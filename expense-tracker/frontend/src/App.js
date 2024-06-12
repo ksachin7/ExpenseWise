@@ -39,7 +39,7 @@ const App = () => {
               <Route path="/expenses/:id" element={<ExpenseItem />} />
               <Route path="/expenses" element={<ExpenseList />} />
               {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
-              <Route path='/users' element={<Users />} />
+              <Route path='/admin' element={<Users />} />
               <Route path='/account' element={<UserProfile />} />
               <Route path='/split' element={<SplitBill />} />
             </Route>

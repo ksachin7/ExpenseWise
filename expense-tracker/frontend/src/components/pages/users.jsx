@@ -168,7 +168,7 @@ const Users = () => {
           </>
         )}
         <Table
-          headers={['id', 'username', `profileImageFileName`, 'email', 'role']}
+          headers={['id', 'username', 'profileImageFileName', 'email', 'role']}
           data={users}
           actions={[
             { icon: <RiEditBoxLine />, label: ` Edit`, color: 'var(--color-green-700)', onClick: editUser },

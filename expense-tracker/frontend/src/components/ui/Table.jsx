@@ -16,6 +16,7 @@ export const TableContainer = styled.div`
 `;
 
 export const TableElement = styled.table`
+  color: var(--color-grey-100);
   width: 100%;
   border-collapse: collapse;
 `;
@@ -27,7 +28,7 @@ export const TableHead = styled.thead`
   text-align: left;
   cursor: pointer;
   background-color: var(--color-silver-100);
-  color: var(--color-silver-700);
+  color: var(--color-silver-100);
 `;
 
 export const TableBody = styled.tbody``;
@@ -47,6 +48,13 @@ export const TableCell = styled.td`
   white-space: nowrap;
 `;
 
+function formatHeader(header) {
+  // Split the header text by capital letters
+  const words = header.split(/(?=[A-Z])/);
+  // Convert words to lowercase and join with dashes
+  return words.map(word => word.toLowerCase()).join('-');
+}
+
 const Table = ({ headers, data, actions }) => {
   // Add 'Actions' header
   const headersWithActions = [...headers, 'Actions'];
@@ -58,7 +66,7 @@ const Table = ({ headers, data, actions }) => {
           <TableRow>
             {/* Render all headers including action headers */}
             {headersWithActions.map(header => (
-              <TableCell key={header}>{header}</TableCell>
+              <TableCell key={header}>{formatHeader(header)}</TableCell>
             ))}
           </TableRow>
         </TableHead>

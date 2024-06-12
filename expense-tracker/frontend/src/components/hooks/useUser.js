@@ -14,7 +14,7 @@ const useUser = () => {
         setIsLoading(true);
 
         try {
-          const response = await fetch(`http://localhost:8080/users/${loggedInUser}`);
+          const response = await fetch(`http://localhost:8080/users/user/${loggedInUser}`);
           if (response.ok) {
             const userData = await response.json();
             setUser(userData);
@@ -40,7 +40,7 @@ const useUser = () => {
 
     const fetchProfileImage = async (fileName) => {
       try {
-        const response = await fetch(`http://localhost:8080/users/profileImage/${fileName}`);
+        const response = await fetch(`http://localhost:8080/users/user/profileImage/${fileName}`);
         if (response.ok) {
           const imageBlob = await response.blob();
           console.log(imageBlob);

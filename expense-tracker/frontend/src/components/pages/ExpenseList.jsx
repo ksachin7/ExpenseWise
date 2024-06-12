@@ -31,7 +31,7 @@ const ExpenseList = ({ expenses }) => {
   };
   return (
     <div>
-      <Heading>Expenses</Heading>
+      <Heading as='h1'>Expenses</Heading>
       <ButtonIcon onClick={openModal}><FaPlus /> Add Expense</ButtonIcon>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <Form onSubmit={handleSubmit}>
