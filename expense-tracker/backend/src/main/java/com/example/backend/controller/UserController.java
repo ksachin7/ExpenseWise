@@ -6,6 +6,7 @@ import com.example.backend.repository.UserRepository;
 import com.example.backend.util.FileUploadUtil;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -71,9 +73,10 @@ public class UserController {
 
     @PostMapping("/admin")
     public ResponseEntity<?> createUser(
-            @Valid @ModelAttribute User user,
+            @Valid @RequestPart User user,
             @RequestPart("profileImage") MultipartFile profileImage,
             BindingResult bindingResult) throws IOException {
+        log.warn(String.valueOf(user));
         if (bindingResult.hasErrors()) {
             List<String> validationErrors = bindingResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -84,6 +87,20 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
         }
 
+        // Check if a user with the provided username or email already exists
+        if (userRepository.existsByUsername(user.getUsername())) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Username already exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Email already exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        }
+
+        // Proceed with user creation if username and email are unique
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Check if the user's role already contains "ADMIN"
@@ -114,9 +131,9 @@ public class UserController {
     @PutMapping("/admin/{id}")
     public ResponseEntity<?> updateUser(
             @PathVariable Long id,
-            @Valid @ModelAttribute User userDetails,
+            @Valid @RequestPart User userDetails,
             @RequestPart("profileImage") MultipartFile profileImage,
-            BindingResult bindingResult) throws IOException {
+            BindingResult bindingResult) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
         if (bindingResult.hasErrors()) {
@@ -126,6 +143,19 @@ public class UserController {
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("message", "Validation failed");
             responseBody.put("errors", validationErrors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        }
+
+        // Check if the updated username or email already exists in the database
+        if (!user.getUsername().equals(userDetails.getUsername()) && userRepository.existsByUsername(userDetails.getUsername())) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Username already exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+        }
+
+        if (!user.getEmail().equals(userDetails.getEmail()) && userRepository.existsByEmail(userDetails.getEmail())) {
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Email already exists");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
         }
 
@@ -144,12 +174,15 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Error occurred while processing profile image");
             }
+        } else {
+            log.error("profile image is empty{}", profileImage);
         }
 
         // Save updated user to repository
         User updatedUser = userRepository.save(user);
         return ResponseEntity.ok(updatedUser);
     }
+
 
     @DeleteMapping("/admin/{id}")
     public void deleteUser(@PathVariable Long id) {

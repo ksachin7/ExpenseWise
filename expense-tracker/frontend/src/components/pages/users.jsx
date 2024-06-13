@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FaEdit, FaTrash, FaPlus, FaSave } from 'react-icons/fa';
+import { FaPlus, FaSave } from 'react-icons/fa';
 import { RiEditBoxLine } from "react-icons/ri";
 import { IoMdTrash } from "react-icons/io";
 import UserService from '../service/UserService';
 import styled from 'styled-components';
-import { Button, Heading, Form, Input, ButtonIcon, Modal } from '../ui';
+import { Button, Heading, Form, Input, ButtonIcon, Modal, FileInput, ErrorMessage } from '../ui';
 import Table from '../ui/Table';
 import RadioButton from '../ui/RadioButton';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Errors } from '../ui/Errors';
 
 const Container = styled.div`
@@ -24,7 +24,8 @@ const defaultValues = {
   username: '',
   password: '',
   email: '',
-  role: ''
+  role: '',
+  profileImage: null,
 };
 
 const Users = () => {
@@ -32,8 +33,11 @@ const Users = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [serverError, setServerError] = useState('');
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue, reset, control } = useForm({
+    defaultValues,
+  });
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -41,12 +45,20 @@ const Users = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setServerError('');
+    resetForm();
   };
 
-  const handleClick = (event) => {
-    event.preventDefault();
-    setShowForm(true);
-    openModal();
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setValue("profileImage", file);
+    }
+  };
+
+  const resetForm = () => {
+    reset(defaultValues);
+    setServerError('');
   };
 
   useEffect(() => {
@@ -62,29 +74,59 @@ const Users = () => {
     }
   };
 
-  const resetForm = () => {
-    setValue(defaultValues);
-  };
-
   const createUser = async (data) => {
     try {
-      await UserService.createUser(data);
-      fetchUsers();
-      resetForm();
-      setShowForm(false);
+      // const formData = new FormData();
+      // Object.keys(data).forEach(key => {
+      //   if (key === 'profileImage' && data[key] instanceof FileList && data[key].length > 0) {
+      //     formData.append(key, data[key][0]);
+      //   } else {
+      //     formData.append(key, data[key]);
+      //   }
+      // });
+
+      const response = await UserService.createUser(data);
+      console.log('User data saved', response,response.data, response.error);
+      if(response.error){
+        setServerError(response.error);
+        console('error hai bhai!')
+      }else{
+        fetchUsers();
+        setShowForm(false);
+        closeModal();
+      }
     } catch (error) {
       console.error('Error creating user:', error);
     }
   };
 
   const updateUser = async (data) => {
-    const { username, password, email, role } = data; // Destructure the data object
     try {
-      await UserService.updateUser(editingUser.id, { username, password, email, role });
-      fetchUsers();
-      resetForm();
-      setEditingUser(null);
-      setShowForm(false);
+      // const formData = new FormData();
+      // Object.keys(data).forEach(key => {
+      //   if (key === 'profileImage' && data[key] instanceof FileList && data[key].length > 0) {
+      //     formData.append(key, data[key][0]);
+      //   } else {
+      //     formData.append(key, data[key]);
+      //   }
+      // });
+
+      // Log formData contents
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
+
+      const response = await UserService.updateUser(editingUser.id, data);
+      console.log('User data updated', response);
+      if(response.error){
+        setServerError(response.error);
+      }else{
+        fetchUsers();
+        resetForm();
+        setEditingUser(null);
+        setShowForm(false);
+        closeModal();
+      }
     } catch (error) {
       console.error('Error updating user:', error);
     }
@@ -100,11 +142,12 @@ const Users = () => {
   };
 
   const editUser = (user) => {
-    // setValue(user);
     setValue('username', user.username);
     setValue('password', user.password);
     setValue('email', user.email);
     setValue('role', user.role);
+    // Here we only set the profileImage filename for reference, actual file needs to be handled separately
+    setValue('profileImage', null);
     setEditingUser(user);
     setShowForm(true);
     openModal();
@@ -112,9 +155,9 @@ const Users = () => {
 
   return (
     <>
-      <Heading as='h1'>User</Heading>
+      <Heading as='h1'>Users</Heading>
       <Container>
-        <ButtonIcon onClick={handleClick}><FaPlus /> Add User</ButtonIcon>
+        <ButtonIcon onClick={() => { setEditingUser(null); setShowForm(true); openModal(); }}><FaPlus /> Add User</ButtonIcon>
         {showForm && (
           <>
             <Modal isOpen={isModalOpen} onClose={closeModal} onClick={() => setShowForm(false)}>
@@ -137,29 +180,45 @@ const Users = () => {
                   type="email"
                   id="email"
                   placeholder="Email"
-                  {...register('email', { required: 'Email is required' })}
+                  {...register('email', { required: 'Email is required', pattern: /^\S+@\S+$/i })}
                 />
                 {errors.email && <Errors className="error">{errors.email.message}</Errors>}
+
+                <FileInput
+                  name="profileImage"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  {...register('profileImage')}
+                />
+                {errors.profileImage && <ErrorMessage>{errors.profileImage.message}</ErrorMessage>}
+
                 <Flex>
-                  <RadioButton
-                    id="userRole"
+                  <Controller
                     name="role"
-                    value="USER"
-                    checked={editingUser ? editingUser.role === 'USER' : true}
-                    onChange={() => setValue('role', 'USER')}
-                    label="User"
-                    {...register('role')}
-                  />
-                  <RadioButton
-                    id="adminRole"
-                    name="role"
-                    value="ADMIN"
-                    checked={editingUser ? editingUser.role === 'ADMIN' : false}
-                    onChange={() => setValue('role', 'ADMIN')}
-                    label="Admin"
-                    {...register('role')}
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <RadioButton
+                          id="userRole"
+                          name="role"
+                          value="USER"
+                          label="User"
+                          checked={field.value === 'USER'}
+                          onChange={() => field.onChange('USER')}
+                        />
+                        <RadioButton
+                          id="adminRole"
+                          name="role"
+                          value="ADMIN"
+                          label="Admin"
+                          checked={field.value === 'ADMIN'}
+                          onChange={() => field.onChange('ADMIN')}
+                        />
+                      </>
+                    )}
                   />
                 </Flex>
+                {serverError && <Errors className="error">{serverError}</Errors>}
                 <ButtonIcon bg='var(--color-grey-50)' type="submit">
                   {editingUser ? <><FaSave /> Update</> : <><FaPlus /> Create</>}
                 </ButtonIcon>

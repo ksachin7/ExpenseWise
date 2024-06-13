@@ -8,6 +8,7 @@ import { HiCalendarDays, HiHomeModern, HiOutlineUsers, HiCog6Tooth } from "react
 import { GiExpense, GiTakeMyMoney } from "react-icons/gi";
 import { useAuth } from '../context/AuthContext';
 import { useUser } from '../hooks/useUser';
+import { FaUserShield } from "react-icons/fa6";
 
 const NavList = styled.ul`
   display: flex;
@@ -66,7 +67,7 @@ function MainNav() {
         <li><StyledNavLink to='/expenses'>
           <GiTakeMyMoney /> <span>Expense</span>
         </StyledNavLink></li>
-        <li><StyledNavLink to='/split'>
+        <li><StyledNavLink to='/addexpense'>
           <GiExpense /> <span>Split Expense</span>
         </StyledNavLink></li>
         <li><StyledNavLink to='/account'>
@@ -75,7 +76,7 @@ function MainNav() {
         </li>
         {(user?.role === 'ROLE_ADMIN' || user?.role === 'ADMIN') &&
           (<li><StyledNavLink to='/admin'>
-            <HiOutlineUsers /> <span>Users</span>
+            <FaUserShield /> <span>Admin Pannel</span>
           </StyledNavLink></li>)}
         {/* <li><StyledNavLink to='/settings'><HiCog6Tooth />
           <span>Settings</span>

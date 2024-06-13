@@ -29,7 +29,7 @@ const RegisterForm = () => {
     // Todo: Have to fix image preview
     const file = e.target.files[0];
     if (file) {
-      setImagePreview(file);
+      setImagePreview(URL.createObjectURL(file));
       setValue("profileImage", e.target.files[0]);
     }
   };

@@ -18,6 +18,12 @@ public class FileUploadUtil {
     public String uploadFileAndSaveToDatabase(MultipartFile file) throws IOException {
         // Code to upload file to a directory
 
+        // Check if the file already exists in the database
+        Optional<FileMetadata> existingFileOptional = fileRepository.findByFileName(file.getOriginalFilename());
+        if (existingFileOptional.isPresent()) {
+            return existingFileOptional.get().getFileName(); // Return the existing file name if it exists
+        }
+
         // Save file metadata to database
         FileMetadata metadata = new FileMetadata();
         metadata.setFileName(file.getOriginalFilename());

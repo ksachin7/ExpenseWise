@@ -25,6 +25,15 @@ function HeaderMenu() {
   return (
     <StyledHeaderMenu>
       <li>
+        {hasAvatar ? (
+          <UserAvatar />
+        ) : (
+          <ButtonIcon iconSize='2.4rem' onClick={() => navigate("/account")}>
+            <HiOutlineUser />
+          </ButtonIcon>
+        )}
+      </li>
+      <li>
         <DarkModeToggle />
       </li>
       <li>
@@ -32,15 +41,6 @@ function HeaderMenu() {
           <MdLogout />
         </ButtonIcon>
       </li>
-      <li>
-      {hasAvatar ? (
-        <UserAvatar />
-      ) : (
-        <ButtonIcon iconSize='2.4rem' onClick={() => navigate("/account")}>
-          <HiOutlineUser />
-        </ButtonIcon>
-      )}
-    </li>
     </StyledHeaderMenu>
   );
 }

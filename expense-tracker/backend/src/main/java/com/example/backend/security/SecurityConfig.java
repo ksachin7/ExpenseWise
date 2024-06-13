@@ -43,8 +43,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/login", "/register", "/h2-console/**", "/users/**","/static/**", "/public/**").permitAll()
-//                                .requestMatchers("/users/admin/**").permitAll()
-                                .requestMatchers("/users/admin/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/admin/**").permitAll()
+//                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 //                                .requestMatchers("/users/user/**").hasAuthority("ROLE_USER", "ADMIN", "*")
                                 .anyRequest().authenticated()
                 )
