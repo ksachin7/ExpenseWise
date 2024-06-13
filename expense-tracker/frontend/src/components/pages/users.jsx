@@ -77,7 +77,7 @@ const Users = () => {
   const createUser = async (data) => {
     try {
       // const formData = new FormData();
-      // Object.keys(data).forEach(key => {
+      // Object.keys(data).forEach((key) => {
       //   if (key === 'profileImage' && data[key] instanceof FileList && data[key].length > 0) {
       //     formData.append(key, data[key][0]);
       //   } else {
@@ -86,19 +86,31 @@ const Users = () => {
       // });
 
       const response = await UserService.createUser(data);
-      console.log('User data saved', response,response.data, response.error);
-      if(response.error){
-        setServerError(response.error);
-        console('error hai bhai!')
-      }else{
+      console.log('User data saved', response, response.status, response.error);
+
+      // Check for validation errors returned from the backend
+       if (response.status === 400 && response.data) {
+        const errorMessages = Object.values(response.data).join(', ');
+        setServerError(`Validation failed: ${errorMessages}`);
+        console.log('Validation errors:', response.data);
+      } else if (response.status === 403) {
+        setServerError('You are not authorized to perform this action.', response);
+      } else if (response[0].error) {
+        // setServerError(response.error.message);
+        setServerError(`Error creating user: ${response[0].error.message}`);
+        console.log('Error creating user:', response.error);
+      } else {
         fetchUsers();
         setShowForm(false);
         closeModal();
       }
     } catch (error) {
       console.error('Error creating user:', error);
+      setServerError(`Error details: ${error.message}`);
     }
   };
+
+
 
   const updateUser = async (data) => {
     try {
@@ -117,10 +129,21 @@ const Users = () => {
       // }
 
       const response = await UserService.updateUser(editingUser.id, data);
-      console.log('User data updated', response);
-      if(response.error){
-        setServerError(response.error);
-      }else{
+      console.log('User data updated', response.error, response[0]);
+      
+      // Check for validation errors returned from the backend
+      if (response.status === 400 && response.data) {
+        console.log('User err', response);
+        const errorMessages = Object.values(response.data).join(', ');
+        setServerError(`Validation failed: ${errorMessages}`);
+        console.log('Validation errors:', response.data);
+      } else if (response.status === 403) {
+        setServerError('You are not authorized to perform this action.', response);
+      } else if (response.error !== null) {
+        // setServerError(response.error.message);
+        setServerError(`Error creating user: ${response.error.message}`);
+        console.log('Error creating user:', response.error);
+      } else {
         fetchUsers();
         resetForm();
         setEditingUser(null);
@@ -173,7 +196,13 @@ const Users = () => {
                   type="password"
                   id="password"
                   placeholder="Password"
-                  {...register('password', { required: 'Password is required' })}
+                  {...register('password', {
+                    required: 'Password is required',
+                    minLength: {
+                      value: 6,
+                      message: 'Password must be at least 6 characters'
+                    }
+                  })}
                 />
                 {errors.password && <Errors className="error">{errors.password.message}</Errors>}
                 <Input
@@ -188,7 +217,7 @@ const Users = () => {
                   name="profileImage"
                   accept="image/*"
                   onChange={handleImageChange}
-                  {...register('profileImage')}
+                  {...register('profileImage', { required: true })}
                 />
                 {errors.profileImage && <ErrorMessage>{errors.profileImage.message}</ErrorMessage>}
 

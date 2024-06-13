@@ -8,6 +8,7 @@ import ButtonsGroup from './ButtonsGroup';
 // Styled table components
 export const TableContainer = styled.div`
   width: 100%;
+  max-width: 90%;
   border-collapse: collapse;
   overflow: scroll;
   overflow-x: auto;
@@ -40,10 +41,11 @@ export const TableRow = styled.tr`
 `;
 
 export const TableCell = styled.td`
+  max-width: 300px;
   border: 1px solid var(--color-grey-300);
   padding: 1rem;
   color: var(--color-silver-700);
-  overflow: hidden;
+  overflow: scroll;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;

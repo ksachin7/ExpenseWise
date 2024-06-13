@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,14 +78,24 @@ public class UserController {
             @RequestPart("profileImage") MultipartFile profileImage,
             BindingResult bindingResult) throws IOException {
         log.warn(String.valueOf(user));
+
+//        if (bindingResult.hasErrors()) {
+//            List<String> validationErrors = bindingResult.getAllErrors().stream()
+//                    .map(ObjectError::getDefaultMessage)
+//                    .collect(Collectors.toList());
+//            Map<String, Object> responseBody = new HashMap<>();
+//            responseBody.put("message", "Validation failed");
+//            responseBody.put("errors", validationErrors);
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+//        }
+
         if (bindingResult.hasErrors()) {
-            List<String> validationErrors = bindingResult.getAllErrors().stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .collect(Collectors.toList());
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("message", "Validation failed");
-            responseBody.put("errors", validationErrors);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+            // Construct error response with validation errors
+            Map<String, String> validationErrors = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                validationErrors.put(error.getField(), error.getDefaultMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationErrors);
         }
 
         // Check if a user with the provided username or email already exists
