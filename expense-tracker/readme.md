@@ -12,10 +12,10 @@ This section displays a preview of the application in action.
 
 ### ER-Diagram
 
-<img src="./ER-Diag.png" alt="ER-Diagram" width="500" height="auto">
+<img src="./ER-Diagram.png" alt="ER-Diagram" width="500" height="auto">
 
 This section showcases the Entity-Relationship (ER) diagram for the project.
-
+<!-- 
 ### Project dir. structure
 
 ```java
@@ -148,7 +148,7 @@ expense-tracker/
 └── readme.md
 
 2282 directories, 19371 files
-```
+``` -->
 
 <!-- Creating this app involves several steps, including setting up the backend and frontend, implementing the necessary features, and connecting them. Here's a high-level overview of the process: -->
 
