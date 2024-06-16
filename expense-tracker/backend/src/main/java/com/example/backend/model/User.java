@@ -7,7 +7,10 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Table(name = "users")
@@ -43,4 +46,12 @@ public class User {
 
     private String profileImageFileName; // Store the filename instead of content
 
+    private BigDecimal balance = BigDecimal.ZERO; // Default initial balance is 0
+
+//    @Column(nullable = false)
+//    private boolean enabled;
+
+    // One-to-Many mapping with Expense
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Expense> expenses = new ArrayList<>();
 }

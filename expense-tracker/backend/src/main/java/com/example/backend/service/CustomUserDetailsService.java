@@ -2,7 +2,6 @@ package com.example.backend.service;
 
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
-import jdk.jshell.spi.ExecutionControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,13 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +31,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
+//                user.isEnabled(),   // Explicitly setting enabled status
+//                true,               // Explicitly setting accountNonExpired
+//                true,               // Explicitly setting credentialsNonExpired
+//                true,               // Explicitly setting accountNonLocked
                 mapRolesToAuthorities(List.of(user.getRole()))
         );
     }
@@ -64,16 +61,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         return suggestions;
     }
 
-//
-//    public void uploadFile(MultipartFile file) throws ExecutionControl.UserException {
-//        try {
-//            if (file.isEmpty()) {
-//                throw new ExecutionControl.UserException("Empty file", null, null);
-//            }
-//            Path destination = Paths.get("rootDir").resolve(Objects.requireNonNull(file.getOriginalFilename())).normalize().toAbsolutePath();
-//            Files.copy(file.getInputStream(), destination);
-//        } catch (IOException e) {
-//            throw new ExecutionControl.UserException("Store exception", null, null);
-//        }
-//    }
 }

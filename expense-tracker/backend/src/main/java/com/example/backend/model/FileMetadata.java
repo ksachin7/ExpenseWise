@@ -11,7 +11,7 @@ public class FileMetadata extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long file_id;
 
     private String fileName;
     private long fileSize;

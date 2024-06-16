@@ -4,6 +4,7 @@ import com.example.backend.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,8 +44,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/login", "/register", "/h2-console/**", "/users/**","/static/**", "/public/**").permitAll()
-                                .requestMatchers("/admin/**").permitAll()
-//                                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                                .requestMatchers("/expenses/**").permitAll()
+//                                .requestMatchers("/expenses/**").authenticated() // Require authentication for expense creation
+                                .requestMatchers("/expenses/**").hasRole("USER") // Require authentication for expense creation
+//                                .requestMatchers("/admin/**").permitAll()
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
 //                                .requestMatchers("/users/user/**").hasAuthority("ROLE_USER", "ADMIN", "*")
                                 .anyRequest().authenticated()
                 )
@@ -113,6 +117,7 @@ public class SecurityConfig {
 //                .passwordEncoder(passwordEncoder());
 //        return authenticationManagerBuilder.build();
 //    }
+
     @Bean
     public AuthenticationManager authenticationManager(CustomUserDetailsService customUserDetailsService) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
