@@ -1,4 +1,4 @@
-import AppLayout from './AppLayout';
+ import AppLayout from './AppLayout';
 import Button from './Button';
 import ButtonIcon from './ButtonIcon';
 import ButtonsGroup from './ButtonsGroup';
@@ -11,7 +11,7 @@ import ErrorFallback from './ErrorFallback';
 import FileInput from './FileInput';
 import Filter from './Filter';
 // import Flag from "./Flag";
-import {FormContainer, Form, ErrorMessage} from './Form';
+import {FormContainer, Form, ErrorMessage, Label} from './Form';
 import FormRow from './FormRow';
 import FormRowVertical from './FormRowVertical';
 import Header from './Header';
@@ -22,6 +22,7 @@ import MainNav from './MainNav';
 import Menus from './Menus';
 import Modal from './Modal';
 import Pagination from './Pagination';
+import RadioButton from './RadioButton';
 import Row from './Row';
 import Select from './Select';
 import SortBy from './SortBy';
@@ -45,7 +46,7 @@ export {
   Empty,
   FileInput,
   Filter,
-  Form, FormContainer, ErrorMessage,
+  Form, FormContainer, ErrorMessage, Label,
   FormRow,
   FormRowVertical,
   Header,
@@ -56,6 +57,7 @@ export {
   Modal,
   Pagination,
   ProtectedRouteContainer,
+  RadioButton,
   Row,
   SortBy,
   Spinner,

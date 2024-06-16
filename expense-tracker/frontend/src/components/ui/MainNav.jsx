@@ -64,10 +64,10 @@ function MainNav() {
         <li><StyledNavLink to='/dashboard'>
           <HiHome /> <span>Home</span>
         </StyledNavLink></li>
-        <li><StyledNavLink to='/expenses'>
+        {/* <li><StyledNavLink to='/expenses'>
           <GiTakeMyMoney /> <span>Expense</span>
-        </StyledNavLink></li>
-        <li><StyledNavLink to='/addexpense'>
+        </StyledNavLink></li> */}
+        <li><StyledNavLink to='/split/expense'>
           <GiExpense /> <span>Split Expense</span>
         </StyledNavLink></li>
         <li><StyledNavLink to='/account'>

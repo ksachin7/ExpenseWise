@@ -139,7 +139,7 @@ const Users = () => {
         console.log('Validation errors:', response.data);
       } else if (response.status === 403) {
         setServerError('You are not authorized to perform this action.', response);
-      } else if (response.error !== null) {
+      } else if (response.error) {
         // setServerError(response.error.message);
         setServerError(`Error creating user: ${response.error.message}`);
         console.log('Error creating user:', response.error);
@@ -256,7 +256,7 @@ const Users = () => {
           </>
         )}
         <Table
-          headers={['id', 'username', 'profileImageFileName', 'email', 'role']}
+          headers={['id', 'username', 'profileImageFileName', 'email', 'role', 'balance', 'expenses']}
           data={users}
           actions={[
             { icon: <RiEditBoxLine />, label: ` Edit`, color: 'var(--color-green-700)', onClick: editUser },

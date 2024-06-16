@@ -45,7 +45,7 @@ export const TableCell = styled.td`
   border: 1px solid var(--color-grey-300);
   padding: 1rem;
   color: var(--color-silver-700);
-  overflow: scroll;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `;

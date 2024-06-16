@@ -2,6 +2,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import { useDarkMode } from "../context/DarkModeContext";
 import { SiExpensify } from "react-icons/si";
+import { GiExpense, GiTakeMyMoney } from "react-icons/gi";
 
 const fadeIn = keyframes`
   0% {
@@ -23,7 +24,7 @@ const StyledLogo = styled.div`
 
 function Logo() {
   const { isDarkMode } = useDarkMode();
-  const LogoIcon = <SiExpensify size={30} color="var(--color-grey-600)" />;
+  const LogoIcon = <GiTakeMyMoney size={30} color="var(--color-indigo-700)" />;
 
   return (
     <StyledLogo>

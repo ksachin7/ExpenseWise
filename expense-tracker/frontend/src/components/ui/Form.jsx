@@ -38,13 +38,18 @@ const Form = styled.form`
   }
   & input{
     width: 100%;
-    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
   & Button{
-    margin-top: 1rem;
+    margin: 1rem 0 1rem 0;
   }
 `;
 
+const Label= styled.span`
+  color: ${color=> color? color : `var(--color-grey-100)`};
+  margin-right: 10px;
+  margin-top: 1rem;
+`;
 
 const ErrorMessage = styled.div`
   color: var(--color-red-500);
@@ -55,4 +60,4 @@ Form.defaultProps = {
   type: "regular",
 };
 
-export {FormContainer, Form, ErrorMessage};
+export {FormContainer, Form, ErrorMessage, Label};

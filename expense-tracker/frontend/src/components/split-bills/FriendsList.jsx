@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Friend from './Friend';
 
@@ -14,9 +14,16 @@ const List = styled.ul`
 
 const FriendsList = ({ friends, onSelection, selectedFriend }) => {
     const [updatedFriends, setUpdatedFriends] = useState(friends);
+
+     // Update updatedFriends when friends prop changes
+     useEffect(() => {
+        setUpdatedFriends(friends);
+    }, [friends]);
+
     const handleRemoveFriend = (friendId) => {
-        setUpdatedFriends(friends.filter((friend) => friend.id !== friendId));
+        setUpdatedFriends(prevFriends => prevFriends.filter((friend) => friend.id !== friendId));
     };
+    
 
     return (
         <List>

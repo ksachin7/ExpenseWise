@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useUser } from '../hooks/useUser';
 import {Heading} from '../ui'
+import { formatCurrency } from '../utils/helpers';
 
 const UserProfile = () => {
   const { isLoading, user, profileImage } = useUser();
@@ -29,6 +30,9 @@ const UserProfile = () => {
           </InfoItem>
           <InfoItem>
             <strong>Email:</strong> {user.email}
+          </InfoItem>
+          <InfoItem>
+            <strong>Balance:</strong>{formatCurrency(user.balance)}
           </InfoItem>
           {/* <InfoItem>
           <strong>Authenticated:</strong> {isAuthenticated ? 'Yes' : 'No'}
