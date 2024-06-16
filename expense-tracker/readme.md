@@ -4,15 +4,28 @@ Personal expense tracker is designed to help users manage their expenses efficie
 
 <!-- ## -->
 
-<!-- ### Screenshots -->
+### Preview
+
+![Preview](./ScreenRecording.gif)
+
+This section displays a preview of the application in action.
+
+### ER-Diagram
+
+<img src="./ER-Diag.png" alt="ER-Diagram" width="500" height="auto">
+
+This section showcases the Entity-Relationship (ER) diagram for the project.
 
 ### Project dir. structure
 
 ```java
 expense-tracker/
 .
+├── ER-Diag.
+├── ER-Diag..png
 ├── backend
 │   ├── HELP.md
+│   ├── backend.iml
 │   ├── mvnw
 │   ├── mvnw.cmd
 │   ├── pom.xml
@@ -26,55 +39,120 @@ expense-tracker/
 │   │   │   │               ├── ServletInitializer.java
 │   │   │   │               ├── controller
 │   │   │   │               │   ├── AuthController.java
-│   │   │   │               │   └── HomeController.java
+│   │   │   │               │   ├── ExpenseController.java
+│   │   │   │               │   ├── FileController.java
+│   │   │   │               │   └── UserController.java
 │   │   │   │               ├── dto
 │   │   │   │               │   ├── AuthResponse.java
 │   │   │   │               │   ├── LoginRequest.java
-│   │   │   │               │   └── SignUpRequest.java
+│   │   │   │               │   └── RegisterRequest.java
 │   │   │   │               ├── exception
+│   │   │   │               │   └── GlobalExceptionHandler.java
 │   │   │   │               ├── model
+│   │   │   │               │   ├── BaseEntity.java
+│   │   │   │               │   ├── Expense.java
+│   │   │   │               │   ├── FileMetadata.java
 │   │   │   │               │   └── User.java
 │   │   │   │               ├── repository
+│   │   │   │               │   ├── ExpenseRepository.java
+│   │   │   │               │   ├── FileRepository.java
 │   │   │   │               │   └── UserRepository.java
 │   │   │   │               ├── security
 │   │   │   │               │   ├── CorsConfig.java
 │   │   │   │               │   └── SecurityConfig.java
-│   │   │   │               └── service
-│   │   │   │                   └── CustomUserDetailsService.java
+│   │   │   │               ├── service
+│   │   │   │               │   ├── CustomUserDetailsService.java
+│   │   │   │               │   ├── ExpenseService.java
+│   │   │   │               │   ├── FileService.java
+│   │   │   │               │   └── FileStorageService.java
+│   │   │   │               └── util
+│   │   │   │                   └── FileUploadUtil.java
 │   │   │   └── resources
 │   │   │       ├── application.properties
 │   │   │       ├── static
 │   │   │       └── templates
 │   │   └── test
+│   │       
 │   └── target
-│       ├── classes       
-│       └── generated-sources
-│           └── annotations
+│       ├── classes
+│       
 ├── frontend
 │   ├── node_modules
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── public
+│   │   ├── default-user.jpg
+│   │   ├── faces
+│   │   │   ├── avatar.jpg
+│   │   │   .
+│   │   │   └── toa-heftiba-O3ymvT7Wf9U-unsplash.jpeg
 │   │   └── index.html
 │   ├── readme.md
 │   ├── src
 │   │   ├── App.js
 │   │   ├── components
-│   │   │   ├── LoginForm.jsx
-│   │   │   ├── Logout.js
-│   │   │   └── RegisterForm.jsx
+│   │   │   ├── auth
+│   │   │   │   ├── LoginForm.jsx
+│   │   │   │   ├── Logout.js
+│   │   │   │   ├── ProtectedRouteContainer.jsx
+│   │   │   │   └── RegisterForm.jsx
+│   │   │   ├── context
+│   │   │   │   ├── AuthContext.js
+│   │   │   │   └── DarkModeContext.js
+│   │   │   ├── expenses
+│   │   │   │   ├── ExpenseForm.jsx
+│   │   │   │   ├── ExpenseItem.jsx
+│   │   │   │   ├── ExpenseList.jsx
+│   │   │   │   └── ExpenseSummary.jsx
+│   │   │   ├── features
+│   │   │   │   ├── ChartData.js
+│   │   │   │   ├── ExpenseActivity.jsx
+│   │   │   │   ├── LineChartComponent.jsx
+│   │   │   │   ├── PieChartComponent.jsx
+│   │   │   │   └── Stats.jsx
+│   │   │   ├── hooks
+│   │   │   │   ├── useExpenseSummary.js
+│   │   │   │   ├── useLocalStorageState.js
+│   │   │   │   ├── useMoveBack.js
+│   │   │   │   ├── useOutsideClick.js
+│   │   │   │   └── useUser.js
+│   │   │   ├── pages
+│   │   │   │   ├── Dashboard.jsx
+│   │   │   │   ├── Expenses.jsx
+│   │   │   │   ├── Login.jsx
+│   │   │   │   ├── PageNotFound.jsx
+│   │   │   │   ├── SplitBill.jsx
+│   │   │   │   ├── UserProfile.jsx
+│   │   │   │   └── users.jsx
+│   │   │   ├── service
+│   │   │   │   ├── ExpenseService.js
+│   │   │   │   └── UserService.js
+│   │   │   ├── split-bills
+│   │   │   │   ├── AddFriend.jsx
+│   │   │   │   ├── Friend.jsx
+│   │   │   │   ├── FriendsList.jsx
+│   │   │   │   └── SplitBillForm.jsx
+│   │   │   ├── styles
+│   │   │   │   └── GlobalStyles.js
+│   │   │   ├── ui
+│   │   │   │   ├── AppLayout.jsx
+│   │   │   │   .
+│   │   │   │   .
+│   │   │   │   .
+│   │   │   │   ├── UserAvatar.jsx
+│   │   │   │   └── index.js
+│   │   │   └── utils
+│   │   │       └── helpers.js
 │   │   └── index.js
-│   ├── styles
-│   │   └── index.css
 │   └── webpack.config.js
 └── readme.md
 
-1731 directories, 12296 files
+2282 directories, 19371 files
 ```
 
-Creating this app involves several steps, including setting up the backend and frontend, implementing the necessary features, and connecting them. Here's a high-level overview of the process:
+<!-- Creating this app involves several steps, including setting up the backend and frontend, implementing the necessary features, and connecting them. Here's a high-level overview of the process: -->
 
-### Steps to Set Up the Application
+<!-- ### Steps to Set Up the Application
 
 1. **Set Up Backend with Spring Boot:**
    - Initialize a Spring Boot project with necessary dependencies.
@@ -92,7 +170,7 @@ Creating this app involves several steps, including setting up the backend and f
 
 4. **Authentication Flow:**
    - Users authenticate through the frontend, which sends requests to the backend.
-   - Backend verifies credentials and issues access tokens for authenticated users.
+   - Backend verifies credentials and issues access tokens for authenticated users. -->
 
 ### Issues Faced and Resolutions
 
@@ -103,6 +181,8 @@ Here are some of the issues I faced during creating this project and how I resol
 - **Redirect Issue**: After connecting to the React login endpoint, I encountered too many redirects because I was using `formLogin()` in Spring Security, which is intended for Thymeleaf or other Spring views, not for React.
 - **CORS Configuration**: Addressed by configuring CORS settings in the backend to allow requests from the frontend.
 - **SQL Reserved Keyword**: Was named an entity as "user" but found that it's a reserved keyword in SQL. Avoided using reserved keywords like "user" for entity names to prevent conflicts.
+- **File-upload issues**: Encountered an `HttpMediaTypeNotSupportedException` and `multipart` file error while attempting to upload files. Fixed them all.
+- **User mapping issue**: Encountered a user mapping issue in expenses where user is null. Currentlly fixing it.
 
 **Frontend Issues**
 
@@ -110,9 +190,9 @@ Here are some of the issues I faced during creating this project and how I resol
 - **react-hhok-form issues**: Was facing issues with registering inputs fixed it.
 - **Handling User Data:** Faced uncertainty about where to manage user data and how to integrate it with authentication.
 - **Resolved Infinite Render Loop:** Initially encountered an infinite render loop due to incorrect logic, trying to fetch and set user details in the AuthContext directly from the `LoginForm`. Rectified by separating concerns: `LoginForm` handles authentication, setting user ID, while `useUser()` hook independently fetches user details.
-- **File-upload issues**: Encountered an `HttpMediaTypeNotSupportedException` error while attempting to upload files. Additionally, React form data did not include file data. Fixed them all.
+- **React form issue**: React form data was not including file data and image preview was not showing.
 
-### Authentication flow in details
+<!-- ### Authentication flow in details
 
 - User enters credentials in the React frontend and submits the login form.
 - The frontend sends a POST request to a login endpoint in the Spring Boot backend.
@@ -120,4 +200,14 @@ Here are some of the issues I faced during creating this project and how I resol
 - The backend sends the JWT token back to the frontend.
 - The frontend stores the JWT token securely.
 - Subsequent requests from the frontend to secured endpoints include the JWT token in the request headers for authentication.
-- The backend verifies the JWT token for each secured request.
+- The backend verifies the JWT token for each secured request. -->
+
+### Future Work
+
+- Implement OAuth and JWT authentication
+- Add forgot password functionality with OTP verification
+- Set up testing, deployment, and CI/CD pipelines
+- Implement backend for split expenses with friends and connect it with expenses
+- Update user profile to include balance and other relevant information
+- Add options for editing and deleting expenses
+- Explore additional features and improvements
