@@ -1,6 +1,6 @@
-# Personal Expense Tracker
+# ExpenseWise
 
-Personal expense tracker is designed to help users manage their expenses efficiently. It consists of a backend built with Spring Boot and a frontend built with React. Authentication and authorization are implemented using Spring Security.
+ExpenseWise is a Personal expense tracker, designed to help users manage their expenses efficiently. It consists of a backend built with Spring Boot and a frontend built with React. Authentication and authorization are implemented using Spring Security.
 
 <!-- ## -->
 
@@ -8,13 +8,13 @@ Personal expense tracker is designed to help users manage their expenses efficie
 
 ![Preview](./ScreenRecording.gif)
 
-This section displays a preview of the application in action.
+<!-- This section displays a preview of the application in action. -->
 
 ### ER-Diagram
 
-<img src="./ER-Diagram.png" alt="ER-Diagram" width="500" height="auto">
+<img src="./ER-Diagram.png" alt="ER-Diagram" width="356" height="auto">
 
-This section showcases the Entity-Relationship (ER) diagram for the project.
+<!-- This section showcases the Entity-Relationship (ER) diagram for the project. -->
 <!-- 
 ### Project dir. structure
 
