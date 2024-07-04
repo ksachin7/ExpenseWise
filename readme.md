@@ -2,7 +2,7 @@
 
 Welcome to my projects repository. These projects are not part of any course or tutorial; they are the result of my own exploration and learning journey.<!-- My main objective is to learn how things are done in the proper way, how to build a full-stack app from scratch.  --> Each project here represents a step forward in my quest for deeper understanding of software development.
 
----
+<!-- --- -->
 
 ## ExpenseWise
 
@@ -42,10 +42,10 @@ ExpenseWise is an Expense Management System, designed to help users efficiently 
 - Routing with React Router DOM.
 - Styled Components and GlobalStyles for styling.
 
+<!-- --- -->
+
+## Other Projects
+
 Feel free to explore the code and contribute if you'd like! If you have any questions or feedback, please don't hesitate to reach out.
 
 Thank you for checking out my projects! 🚀
-
----
-
-## Other Projects
