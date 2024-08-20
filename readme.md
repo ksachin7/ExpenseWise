@@ -4,7 +4,7 @@ Welcome to my projects repository. These projects are not part of any course or 
 
 <!-- --- -->
 
-## ExpenseWise
+## 1. ExpenseWise
 
 ExpenseWise is an Expense Management System, designed to help users efficiently track their expenses. It provides features for managing expenses, generating reports, and visualizing spending patterns.
 
@@ -44,7 +44,13 @@ ExpenseWise is an Expense Management System, designed to help users efficiently 
 
 <!-- --- -->
 
-## Other Projects
+## 2. Upcoming Projects
+
+...
+
+## Contributing
+
+To contribute to this project, please review our [Contributing](CONTRIBUTING.md) and [Pull Request Guidelines](PR_GUIDELINES.md) for detailed instructions on how to create and manage pull requests.
 
 Feel free to explore the code and contribute if you'd like! If you have any questions or feedback, please don't hesitate to reach out.
 
