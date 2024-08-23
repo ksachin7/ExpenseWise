@@ -10,6 +10,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -41,8 +44,15 @@ public class SecurityConfig {
 //                .cors(AbstractHttpConfigurer::disable) // Disable default CORS to use custom filter
 //                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS with custom configuration
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if not needed
+//                .csrf((csrf) -> csrf
+//                        .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+//                )
+//                .csrf((csrf) -> csrf
+//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//                )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+                                .requestMatchers("/csrf-token").permitAll()
                                 .requestMatchers("/login", "/register", "/h2-console/**", "/users/**","/static/**", "/public/**").permitAll()
                                 .requestMatchers("/expenses/**").permitAll()
 //                                .requestMatchers("/expenses/**").authenticated() // Require authentication for expense creation
@@ -60,13 +70,10 @@ public class SecurityConfig {
 //                                .failureUrl("/login?error=true")
 //                                .permitAll()
 //                )
-//                .csrf(csrf ->
-//                        csrf
-//                                .ignoringRequestMatchers("/h2-console/**")
-//                )
+//                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                 .headers(headers ->
                         headers
-                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Allow framing from same origin (useful for H2 console)
                 )
 //                .logout(logout ->
 //                                logout
@@ -118,24 +125,24 @@ public class SecurityConfig {
 //        return authenticationManagerBuilder.build();
 //    }
 
-    @Bean
-    public AuthenticationManager authenticationManager(CustomUserDetailsService customUserDetailsService) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(customUserDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-
-        return new ProviderManager(authenticationProvider);
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(CustomUserDetailsService customUserDetailsService) {
+//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setUserDetailsService(customUserDetailsService);
+//        authenticationProvider.setPasswordEncoder(passwordEncoder());
+//
+//        return new ProviderManager(authenticationProvider);
+//    }
 
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth, UserDetailsService userDetailsService) throws Exception {
 //        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 //    }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
 //    @Autowired
 //    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

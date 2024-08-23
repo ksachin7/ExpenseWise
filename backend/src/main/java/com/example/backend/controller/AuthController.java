@@ -90,7 +90,6 @@ public class AuthController {
 //            }
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             log.info("User '{}' successfully authenticated. Authorities: {}", userDetails.getUsername(), userDetails.getAuthorities());
-
             return ResponseEntity.ok(new AuthResponse(userDetails.getUsername(), userDetails.getAuthorities().iterator().next().getAuthority(), "Login successful!"));
         } catch (AuthenticationException e) {
             log.warn("Authentication failed for username: {}", loginRequest.getUsername());

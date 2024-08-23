@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useCsrfToken } from '../hooks/useCsrfToken';
 import { Button, FileInput, FormContainer, ErrorMessage, Form, Input, Heading } from '../ui';
 import FilePreview from '../ui/FilePreview';
 
@@ -22,19 +23,22 @@ const RegisterForm = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [suggestedUsernames, setSuggestedUsernames] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
-  const fileInputRef = useRef(null); 
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const csrfToken = useCsrfToken();
 
   const handleImageChange = (e) => {
     // Todo: Have to fix image preview
     const file = e.target.files[0];
+    const previewURL = URL.createObjectURL(file);
+
     if (file) {
-      setImagePreview(URL.createObjectURL(file));
+      setImagePreview(previewURL);
       setValue("profileImage", e.target.files[0]);
     }
   };
 
-
+console.log(imagePreview)
   const submitForm = async (data) => {
     try {
       // const formData = new FormData();
@@ -52,6 +56,7 @@ const RegisterForm = () => {
       const response = await axios.post('http://localhost:8080/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'X-CSRF-TOKEN': csrfToken   // Include CSRF token in headers
         },
       });
 
@@ -63,7 +68,7 @@ const RegisterForm = () => {
           const { message, suggestedUsernames: suggestions } = error.response.data;
           setErrorMessage(message);
           setSuggestedUsernames(suggestions);
-        } else if (error.response.status === 400 ) {
+        } else if (error.response.status === 400) {
           const { errors: validationErrors } = error.response.data;
           validationErrors.forEach(err => {
             setError(err.field, { type: 'manual', message: err.defaultMessage });
@@ -102,7 +107,7 @@ const RegisterForm = () => {
             {...register('username', { required: 'Username is required' })}
           />
           {errors.username && <ErrorMessage>{errors.username.message}</ErrorMessage>}
-          
+
           <Input
             name="email"
             type="email"
@@ -110,7 +115,7 @@ const RegisterForm = () => {
             {...register('email', { required: 'Email is required' })}
           />
           {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
-          
+
           <Input
             name="password"
             type="password"
@@ -118,21 +123,25 @@ const RegisterForm = () => {
             {...register('password', { required: 'Password is required' })}
           />
           {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
-          
+
           <FileInput
             name="profileImage"
             accept="image/*"
-            ref={fileInputRef} 
+            ref={fileInputRef}
             onChange={handleImageChange}
             {...register('profileImage', { required: true })}
           />
           {errors.profileImage && <ErrorMessage>{errors.profileImage.message}</ErrorMessage>}
-          
+
           {imagePreview && <FilePreview file={imagePreview} />}
-          
+          {true && (
+            <div>
+              <img src={imagePreview} alt="Image preview" style={{ width: '200px', height: 'auto' }} />
+            </div>
+          )}
           <Button style={{ marginTop: '10px' }} variation="secondary" size="md" type="submit">Register</Button>
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          
+
           {suggestedUsernames.length > 0 && (
             <Suggestions>
               <p>Username suggestions:</p>

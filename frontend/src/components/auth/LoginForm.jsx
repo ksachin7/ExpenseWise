@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { Button, Container } from "../ui";
-import { useUser } from "../hooks/useUser";
 import { useAuth } from "../context/AuthContext";
+import { useCsrfToken} from '../hooks/useCsrfToken';
 
 const FullPageContainer = styled.div`
   position: relative;
@@ -17,37 +17,12 @@ const FormContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* display: flex;
-  flex-direction: column;
-  align-items: center; */
   margin: auto;
   padding: 30px;
   border-radius: 10px;
   width: 100%;
   max-width: 400px;
   box-shadow: var(--shadow-md);
-`;
-
-const BackgroundVideo = styled.video`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-`;
-const BackgroundImg = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  /* background-image: url('https://source.unsplash.com/random/800x600');  */
-  /* background-image: url('https://unsplash.com/photos/ix_kUDzCczo/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTR8fGdyYWRpZW50fGVufDB8fHx8MTcxNzYyMjYwMnww&force=true&w=640'); */
-  background-size: cover;
 `;
 
 const Form = styled.form`
@@ -68,7 +43,7 @@ const CheckboxContainer = styled.div`
 `;
 
 const Checkbox = styled.input`
-  margin-right: 5px; 
+  margin-right: 5px;
   width: fit-content;
 `;
 
@@ -125,16 +100,16 @@ const LoginForm = () => {
   const { login } = useAuth();
   const { loggedInUser, setLoggedInUser } = useAuth();
 
-  // Load rememberMe preference from localStorage on component mount
+  const csrfToken = useCsrfToken();
+
   useEffect(() => {
-    const rememberMePreference =
-      localStorage.getItem("rememberMe") === "true";
+    const rememberMePreference = localStorage.getItem("rememberMe") === "true";
     setRememberMe(rememberMePreference);
     if (rememberMePreference) {
       const storedUsername = localStorage.getItem("username");
       setUsername(storedUsername || "");
     }
-  }, []);
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -144,55 +119,20 @@ const LoginForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
         },
         body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        // Handle success (e.g., save token, redirect)
-        const { username: user } = data; // Extract username from response data
-        console.log('data', data, ', Extracted username:', user);
-
+        const { username: user } = data;
         setLoggedInUser(user);
-        // setLoggedInUser(prevUser => user);
-        console.log('loggedInUser:', loggedInUser) // null
         setMsg("Login successful!");
-        login(); // Trigger login action
-
-        // // Fetch user information after successful login
-        // const userResponse = await fetch(`${api}/user`, {
-        //   headers: {
-        //     Authorization: `Bearer ${data.token}`, // Assuming the server responds with a token
-        //   },
-        // });
-
-        // if (userResponse.ok) {
-        //   const userData = await userResponse.json();
-        //   // Store user data in your application state or context
-        //   setUser(userData);
-        // } else {
-        //   // Handle error fetching user info
-        //   console.error("Failed to fetch user information after login");
-        // }
-
-        // Fetch user information after successful login
-        // const userDataResponse = await fetch(`${api}/user`, {
-        //   credentials: "include", // Ensure credentials (session) are included in the request
-        // });
-
-        // if (userDataResponse.ok) {
-        //   const userData = await userDataResponse.json();
-        //   // Store user data in your application state or context
-        //   setUser(userData);
-        // } else {
-        //   // Handle error fetching user info
-        //   console.error("Failed to fetch user information after login");
-        // }
+        login();
 
         navigate("/");
 
-        // console.log("Login successful:", data);
         if (rememberMe) {
           localStorage.setItem("username", username);
           localStorage.setItem("rememberMe", true);
@@ -200,12 +140,10 @@ const LoginForm = () => {
           localStorage.removeItem("username");
           localStorage.removeItem("rememberMe");
         }
-
       } else {
         const data = await response.text();
         setError(true);
         setMsg(data);
-        // Handle error
         console.error("Login failed: ", data);
       }
     } catch (error) {
@@ -215,11 +153,6 @@ const LoginForm = () => {
 
   return (
     <FullPageContainer>
-      {/* <BackgroundVideo autoPlay loop muted>
-        <source src="path_to_your_video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </BackgroundVideo> */}
-      {/* <BackgroundImg /> */}
       <FormContainer>
         <Title>Login</Title>
         <Form onSubmit={handleSubmit}>
