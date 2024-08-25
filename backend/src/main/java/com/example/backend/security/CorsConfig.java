@@ -26,7 +26,7 @@ public class CorsConfig {
 //        config.setExposedHeaders(List.of("authorization, content-type, xsrf-token"));
 //        config.addAllowedHeader("authorization, content-type, xsrf-token"); // Allow headers
         config.setAllowCredentials(true); // Allow credentials (e.g., cookies)
-        config.setMaxAge(3600L);
+//        config.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
