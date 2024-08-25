@@ -52,6 +52,7 @@ public class SecurityConfig {
 //                )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+//                                .requestMatchers("/**").permitAll()    // Adjust the permit rules as needed
                                 .requestMatchers("/csrf-token").permitAll()
                                 .requestMatchers("/login", "/register", "/h2-console/**", "/users/**","/static/**", "/public/**").permitAll()
                                 .requestMatchers("/expenses/**").permitAll()
