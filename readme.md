@@ -244,6 +244,58 @@ Here are some of the issues I faced during creating this project and how I resol
 - Add options for editing and deleting expenses
 - Explore additional features and improvements
 
+### Steps to Run the Project
+
+Ensure you have Docker and Docker Compose installed on your system.
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/yourusername/yourproject.git
+   cd yourproject
+   ```
+
+2. **Build and Run the Containers:**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   This will build the frontend, backend, and MySQL services, and start them up.
+
+3. **Access the Application:**
+   - **Frontend:** Visit `http://localhost:9000` in your browser.
+   - **Backend:** The backend service runs on `http://localhost:8080`.
+   - **Database:** MySQL is exposed on port `3307`.
+
+4. **Shut Down the Containers:**
+
+   ```bash
+   docker-compose down
+   ```
+
+   This will stop and remove the containers.
+
+### Troubleshooting
+
+If you encounter any issues, check the container logs:
+
+```bash
+docker-compose logs
+```
+
+Ensure all services are up and running:
+
+```bash
+docker ps
+```
+
+### Notes
+
+- The frontend is built using Node.js 20 and served with Nginx.
+- The backend is built with Maven and runs on OpenJDK 17.
+- The MySQL database is initialized with the `expenses` database.
+
 ## Contributing
 
 To contribute to this project, please review our [Contributing](CONTRIBUTING.md) and [Pull Request Guidelines](PR_GUIDELINES.md) for detailed instructions on how to create and manage pull requests.
