@@ -53,6 +53,8 @@ CMD ["java", "-jar", "app.jar"]
 # ENV DB_USERNAME=root
 # ENV DB_PASSWORD=''
 
+# ---
+
 # FROM openjdk:17-jdk-slim
 
 # # Set the working directory inside the container
